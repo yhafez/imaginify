@@ -1,12 +1,12 @@
 'use client'
-import React from 'react'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
-import { Button } from '../ui/button'
-import { navLinks } from '../../../constants'
+import { navLinks } from '@/constants'
+import { Button } from '@/src/components/ui/button'
 
 const Sidebar = () => {
 	const pathname = usePathname()
@@ -118,7 +118,6 @@ const Sidebar = () => {
 							})}
 							<li className='flex-start cursor-pointer gap-2 p-4'>
 								<UserButton
-									afterSignOutUrl='/'
 									showName
 								/>
 							</li>

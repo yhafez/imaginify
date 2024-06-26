@@ -1,11 +1,11 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+
+import { Sheet, SheetContent, SheetTrigger } from '@/src/components/ui/sheet'
 
 import { Button } from '../ui/button'
 import { navLinks } from '../../../constants'
@@ -20,7 +20,7 @@ const MobileNav = () => {
 			</Link>
 			<nav className='flex gap-2'>
 				<SignedIn>
-					<UserButton afterSignOutUrl='/' />
+					<UserButton />
 					<Sheet>
 						<SheetTrigger>
 							<Image
