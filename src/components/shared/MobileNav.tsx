@@ -1,14 +1,13 @@
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { usePathname } from 'next/navigation'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { usePathname } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
 
-import { Sheet, SheetContent, SheetTrigger } from '@/src/components/ui/sheet'
-
-import { Button } from '../ui/button'
-import { navLinks } from '../../../constants'
+import { Sheet, SheetContent, SheetTrigger } from 'shadcn/sheet'
+import { Button } from 'shadcn/button'
+import { navLinks } from '@/constants'
 
 const MobileNav = () => {
 	const pathname = usePathname()

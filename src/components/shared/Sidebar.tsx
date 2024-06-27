@@ -1,12 +1,12 @@
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { usePathname } from 'next/navigation'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { usePathname } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
 
 import { navLinks } from '@/constants'
-import { Button } from '@/src/components/ui/button'
+import { Button } from 'shadcn/button'
 
 const Sidebar = () => {
 	const pathname = usePathname()
