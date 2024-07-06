@@ -5,9 +5,10 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from 'shadcn/select'
-import { CustomField } from 'components/CustomField'
 import { aspectRatioOptions, defaultValues, transformationTypes } from '@/constants'
 import { AspectRatioKey, debounce, deepMergeObjects } from 'utils'
+import { CustomField } from 'components/CustomField'
+import MediaUploader from 'components/MediaUploader'
 import { Button } from 'shadcn/button'
 import { Input } from 'shadcn/input'
 import { Form } from 'shadcn/form'
@@ -213,6 +214,34 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 						)}
 					</div>
 				)}
+
+				<div className='media-uploader-field'>
+					<CustomField
+						control={form.control}
+						name='publicId'
+						formLabel='Upload Image'
+						className='flex size-full flex-col'
+						render={({ field }) => (
+							<MediaUploader
+								onValueChange={
+									field.onChange
+								}
+								setImage={
+									setImage
+								}
+								publicId={
+									field.value
+								}
+								image={
+									image
+								}
+								type={
+									type
+								}
+							/>
+						)}
+					/>
+				</div>
 
 				<div className='flex flex-col gap-4'>
 					<Button
