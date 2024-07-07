@@ -7,8 +7,10 @@ import { z } from 'zod'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from 'shadcn/select'
 import { aspectRatioOptions, defaultValues, transformationTypes } from '@/constants'
 import { AspectRatioKey, debounce, deepMergeObjects } from 'utils'
+import TransformedImage from 'components/TransformedImage'
 import { CustomField } from 'components/CustomField'
 import MediaUploader from 'components/MediaUploader'
+import { updateCredits } from 'actions/user.actions'
 import { Button } from 'shadcn/button'
 import { Input } from 'shadcn/input'
 import { Form } from 'shadcn/form'
@@ -82,7 +84,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		return onChangeField(value)
 	}
 
-	// TODO: Return to updateCredits
+	// TODO: Update creditFee to something else
 	const onTransformHandler = () => {
 		setIsTransforming(true)
 
@@ -91,7 +93,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		setNewTransformation(null)
 
 		startTransition(async () => {
-			// await updateCredits(userId, creditFee)
+			await updateCredits(userId, -1)
 		})
 	}
 
@@ -240,6 +242,15 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 								}
 							/>
 						)}
+					/>
+
+					<TransformedImage
+						image={image}
+						type={type}
+						title={form.getValues().title}
+						isTransforming={isTransforming}
+						setIsTransforming={setIsTransforming}
+						transformationConfig={transformationConfig}
 					/>
 				</div>
 

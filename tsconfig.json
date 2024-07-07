@@ -24,7 +24,8 @@
 			"actions/*": ["./lib/actions/*"],
 			"database/*": ["./lib/database/*"],
 			"models/*": ["./lib/database/models/*"],
-			"utils": ["./lib/utils"]
+			"utils": ["./lib/utils"],
+			"actions": ["./lib/actions"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
