@@ -1,11 +1,11 @@
 'use server'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 import { connectToDatabase } from '../database/mongoose'
 import Image from '../database/models/image.model'
 import User from '../database/models/user.model'
 import { handleError } from '../utils'
-import { redirect } from 'next/navigation'
 
 const populateUser = (query: any) => query.populate({ path: 'author', model: 'User', select: '_id firstName lastName' })
 

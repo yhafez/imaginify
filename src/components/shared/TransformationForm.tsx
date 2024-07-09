@@ -1,6 +1,8 @@
 'use client'
 import { useState, useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { getCldImageUrl } from 'next-cloudinary'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -11,6 +13,7 @@ import TransformedImage from 'components/TransformedImage'
 import { CustomField } from 'components/CustomField'
 import MediaUploader from 'components/MediaUploader'
 import { updateCredits } from 'actions/user.actions'
+import { addImage, updateImage } from 'actions/image.actions'
 import { Button } from 'shadcn/button'
 import { Input } from 'shadcn/input'
 import { Form } from 'shadcn/form'
@@ -32,11 +35,12 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 	const [isTransforming, setIsTransforming] = useState(false)
 	const [transformationConfig, setTransformationConfig] = useState(config)
 	const [isPending, startTransition] = useTransition()
+	const router = useRouter()
 
 	const transformationType = transformationTypes[type]
 
 	const initialValues =
-		data && action.toLocaleLowerCase() === 'update'
+		data && action === 'Update'
 			? {
 					title: data?.title,
 					aspectRatio: data?.aspectRatio,
@@ -51,8 +55,70 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		defaultValues: initialValues,
 	})
 
-	const onSubmit = (values: FormSchema) => {
-		console.log(values)
+	const onSubmit = async (values: FormSchema) => {
+		setIsSubmitting(true)
+
+		if (data || image) {
+			const transformationUrl = getCldImageUrl({
+				width: image?.width,
+				height: image?.height,
+				src: image?.publicId,
+				...transformationConfig,
+			})
+
+			const imageData = {
+				title: values.title,
+				publicId: image?.publicId,
+				transformationType: type,
+				width: image?.width,
+				height: image?.height,
+				config: transformationConfig,
+				secureURL: image?.secureUrl,
+				transformationURL: transformationUrl,
+				aspectRatio: values.aspectRatio,
+				prompt: values.prompt,
+				color: values.color,
+			}
+
+			if (action === 'Add') {
+				try {
+					const newImage = await addImage({
+						image: imageData,
+						userId,
+						path: '/',
+					})
+
+					if (newImage) {
+						form.reset()
+						setImage(data)
+						router.push(`/transformations/${newImage._id}`)
+					}
+				} catch (error) {
+					console.error(error)
+				}
+			}
+
+			if (action === 'Update') {
+				try {
+					const updatedImage = await updateImage({
+						image: {
+							...imageData,
+							_id: data._id,
+						},
+						userId,
+						path: `/transformations/${data._id}`,
+					})
+
+					if (updatedImage) {
+						router.push(`/transformations/${updatedImage._id}`)
+					}
+				} catch (error) {
+					console.error(error)
+				}
+			}
+		}
+
+		setIsSubmitting(false)
 	}
 
 	const onSelectFieldHandler = (value: string, onChangeField: (value: string) => void) => {
@@ -88,7 +154,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 	const onTransformHandler = () => {
 		setIsTransforming(true)
 
-		deepMergeObjects(newTransformation, transformationConfig)
+		setTransformationConfig(deepMergeObjects(newTransformation, transformationConfig))
 
 		setNewTransformation(null)
 
